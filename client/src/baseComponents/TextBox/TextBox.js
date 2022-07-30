@@ -6,7 +6,17 @@ import Icon from 'BaseComponents/Icon';
 
 import styles from './TextBox.module.scss';
 
-const TextBox = ({ labelText, isRequired, className, type, ...props }) => {
+const TextBox = ({
+  labelText,
+  isRequired,
+  onChange,
+  val,
+  setVal,
+  errorHandler,
+  className,
+  type,
+  ...props
+}) => {
   const [curType, setCurType] = useState(type);
 
   return (
@@ -21,6 +31,14 @@ const TextBox = ({ labelText, isRequired, className, type, ...props }) => {
           <BaseInput
             className={cx('inputField', type === 'password' && styles.inputWithEye)}
             type={curType}
+            value={val}
+            onChange={(e) => {
+              setVal(e.target.value);
+              errorHandler('');
+              if (onChange) {
+                onChange(e);
+              }
+            }}
             {...props}
           />
           {type === 'password' && (
