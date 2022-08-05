@@ -35,8 +35,6 @@ services:
       context: ./api
     env_file:
       - ./config/envFiles/django/prod/.env
-    volumes:
-      - static-data:/usr/src/app/vol
     command: celery -A config worker -l info
     depends_on:
       - db
@@ -49,22 +47,18 @@ services:
       context: ./api
     env_file:
       - ./config/envFiles/django/prod/.env
-    volumes:
-      - static-data:/usr/src/app/vol
     command: celery -A config beat -l info
     depends_on:
       - db
       - smtp4dev
       - redis
-  
+
   celery-flower:
     build:
       dockerfile: Dockerfile
       context: ./api
     env_file:
       - ./config/envFiles/django/prod/.env
-    volumes:
-      - static-data:/usr/src/app/vol
     command: celery -A config flower --basic_auth=${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}
     ports:
       - "5555:5555"
@@ -72,7 +66,7 @@ services:
       - db
       - smtp4dev
       - redis
-  
+
   db:
     restart: always
     image: postgres:13-alpine
@@ -92,7 +86,7 @@ services:
       - "143:143"
     volumes:
       - smtp4dev-data:/smtp4dev
-  
+
   redis:
     image: redis:alpine3.15
     restart: always
